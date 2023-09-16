@@ -1,0 +1,101 @@
+apiVersion: "kubeflow.org/v1"
+kind: PyTorchJob
+metadata:
+  name: torch-dist
+  namespace: ml0
+spec:
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          labels:
+            app: workerl
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: pytorch
+              image: registry.i.sumus.work/kube/mlsynth:pytorch-2.0.1-cuda11.7-cudnn8-runtime
+              imagePullPolicy: Always
+              # command:
+              #   - "python3"
+              #   - "/opt/pytorch-mnist/mnist.py"
+              #   - "--epochs=1"
+              command: ["/bin/bash", "-c"]
+              args: ["source a.sh"]
+              # args: ["sleep 6000"]
+              workingDir: /workspace
+              volumeMounts:
+              - name: datasets
+                mountPath: /datasets
+              - name: workspace
+                mountPath: /workspace
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+          volumes:
+            - name: datasets
+              nfs:
+                server: k8s-st04.i.clive.tk
+                path: /exports
+                readOnly: true
+            - name: workspace
+              nfs:
+                server: kube-exp-w1.k8s.sumus.work
+                path: /mnt/ssd/workspace
+                readOnly: false
+
+
+    Worker:
+      replicas: 2
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          labels:
+            app: workerl
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: pytorch
+              image: registry.i.sumus.work/kube/mlsynth:pytorch-2.0.1-cuda11.7-cudnn8-runtime
+              imagePullPolicy: Always
+              # command:
+              #   - "python3"
+              #   - "/opt/pytorch-mnist/mnist.py"
+              #   - "--epochs=1"
+              command: ["/bin/bash", "-c"]
+              args: ["source a.sh"]
+              # args: ["sleep 6000"]
+              workingDir: /workspace
+              volumeMounts:
+              - name: datasets
+                mountPath: /datasets
+              - name: workspace
+                mountPath: /workspace
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - workerl
+                topologyKey: kubernetes.io/hostname
+          volumes:
+            - name: datasets
+              nfs:
+                server: k8s-st04.i.clive.tk
+                path: /exports
+                readOnly: true
+            - name: workspace
+              nfs:
+                server: kube-exp-w1.k8s.sumus.work
+                path: /mnt/ssd/workspace
+                readOnly: false
