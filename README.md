@@ -8,6 +8,8 @@ ResNet is used, but you can switch to small "Net" by uncomment lines.
 
 Validation and inference is not ready yet.
 
+Also look at [Link to my repository with training in Parameter Server paradigm with Tensorflow](https://github.com/Anoncheg1/tensorflow-parameter-server)
+
 # files
 
 - torch.yaml - Kubernetes yaml file.
