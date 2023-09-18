@@ -1,5 +1,7 @@
 # pytorch-fsdp-multi-node
 
+Also, look at Parameter Server approach in Tensorflow [My repository with training in Parameter Server paradigm with Tensorflow](https://github.com/Anoncheg1/tensorflow-parameter-server)
+
 Training ResNet50 in Fully Sharded Data Parallel (FSDP) approach at kubernetes cluster with help of Kubeflow.
 
 Landmark 2020 is used, but you can switch to MNIST with commented lines.
@@ -8,7 +10,12 @@ ResNet is used, but you can switch to small "Net" by uncomment lines.
 
 Validation and inference is not ready yet.
 
-Also look at [Link to my repository with training in Parameter Server paradigm with Tensorflow](https://github.com/Anoncheg1/tensorflow-parameter-server)
+There is LandmarkDataset class that inherit torch.utils.data.Dataset.
+This class have cache feature - it can save images after applying
+"transform" to cache of pickle files and then read from this cache.
+
+If you uncomment last line in main-dist-fsdp.py will be able to test code at one machine.
+
 
 # files
 
