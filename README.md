@@ -20,7 +20,7 @@ If you uncomment last line in main-dist-fsdp.py will be able to test code at one
 # files
 
 - torch.yaml - Kubernetes yaml file.
-- a.sh - used to gather stdout and stderr of main-dist-fsdp.py to logs and execute this file
+- a.sh - used to gather stdout and stderr of main-dist-fsdp.py to grap logs and execute this file
 - main-dist-fsdp.py - main file uses datasetmetareader.py and policies/
 - main-local.py - simple PyTorch training with validation and inference, uses datasetmetareader.py
 - datasetmetareader.py - function for prepareing Landmarks 2020 dataset
